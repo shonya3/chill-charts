@@ -78,6 +78,14 @@ export class DamageThresholdChartElement extends LitElement {
 					},
 				},
 				plugins: {
+					title: {
+						display: true,
+						text: 'Damage to Ailment Threshold vs. Chill Percentage',
+						font: {
+							size: 18,
+						},
+						padding: { top: 10, bottom: 20 },
+					},
 					tooltip: {
 						mode: 'index',
 						intersect: false,
