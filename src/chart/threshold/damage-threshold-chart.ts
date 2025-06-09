@@ -82,6 +82,12 @@ export class DamageThresholdChartElement extends LitElement {
 						mode: 'index',
 						intersect: false,
 						callbacks: {
+							title: function (tooltipItems) {
+								if (tooltipItems.length > 0) {
+									return tooltipItems[0].label + '% Chill';
+								}
+								return '';
+							},
 							label: function (context) {
 								let label = context.dataset.label || '';
 								if (label) label += ': ';
