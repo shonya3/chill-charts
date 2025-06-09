@@ -25,12 +25,13 @@ export class DamageThresholdChartElement extends LitElement {
 	}
 
 	#colors = [
-		'rgb(75, 192, 192)',
-		'rgb(255, 99, 132)',
-		'rgb(54, 162, 235)',
-		'rgb(255, 159, 64)',
-		'rgb(153, 102, 255)',
+		'oklch(54.6% 0.245 262.881)', // blue-600
+		'oklch(90.5% 0.093 164.15)', // emerald-200
+		'oklch(69.6% 0.17 162.48)', // emerald-500
+		'oklch(43.2% 0.095 166.913)', // emeral-900
+		'rgb(153, 102, 255)', // Purple - remains as a fallback
 	];
+
 	createOrUpdateChart(): void {
 		if (!this.canvas) {
 			return;
