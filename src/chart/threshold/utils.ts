@@ -7,13 +7,15 @@ export type Point = {
 
 export type SeriesData = {
 	name: string;
+	color: string;
 	points: Array<Point>;
 };
 
-export function generateSeriesData(increasedChill: number, chills: Array<number>): SeriesData {
+export function generateSeriesData(increasedChill: number, chills: Array<number>, color: string): SeriesData {
 	return {
 		name: `+${increasedChill * 100}% effect`.padEnd(13),
 		points: createPoints(chills, increasedChill),
+		color,
 	};
 }
 

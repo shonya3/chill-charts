@@ -1,4 +1,4 @@
-import { LitElement, html, type TemplateResult, CSSResult, type PropertyValues } from 'lit';
+import { LitElement, html, type TemplateResult, CSSResult } from 'lit';
 import { customElement, property, query } from 'lit/decorators.js';
 import { defaultChills, generateSeriesData } from './utils';
 import { Chart } from 'chart.js/auto';
@@ -10,28 +10,36 @@ export class DamageThresholdChartElement extends LitElement {
 
 	@property({ type: Array }) chills: Array<number> = defaultChills();
 
-	@property({ type: Array }) chillIncreasedArray: Array<number> = [0, 0.5, 1, 1.5];
+	@property({ type: Array }) increasedChillEffects: Array<{ increasedChill: number; color: string }> = [
+		{
+			increasedChill: 0,
+			color: 'oklch(54.6% 0.245 262.881)', // blue-600
+		},
+		{
+			increasedChill: 0.5,
+			color: 'oklch(90.5% 0.093 164.15)', // emerald-200
+		},
+		{
+			increasedChill: 1,
+			color: 'oklch(69.6% 0.17 162.48)', // emerald-500
+		},
+		{
+			increasedChill: 1.5,
+			color: 'oklch(43.2% 0.095 166.913)', // emerald-900
+		},
+	];
 
 	@query('canvas') private canvas!: HTMLCanvasElement;
-
-	#chartInstance: Chart | null = null;
 
 	protected render(): TemplateResult {
 		return html`<canvas></canvas>`;
 	}
 
-	protected updated(_changedProperties: PropertyValues): void {
+	protected updated(): void {
 		this.createOrUpdateChart();
 	}
 
-	#colors = [
-		'oklch(54.6% 0.245 262.881)', // blue-600
-		'oklch(90.5% 0.093 164.15)', // emerald-200
-		'oklch(69.6% 0.17 162.48)', // emerald-500
-		'oklch(43.2% 0.095 166.913)', // emeral-900
-		'rgb(153, 102, 255)', // Purple - remains as a fallback
-	];
-
+	#chartInstance: Chart | null = null;
 	createOrUpdateChart(): void {
 		if (!this.canvas) {
 			return;
@@ -41,18 +49,16 @@ export class DamageThresholdChartElement extends LitElement {
 			this.#chartInstance.destroy();
 		}
 
-		const datasets = this.chillIncreasedArray
-			.map(increasedChill => generateSeriesData(increasedChill, this.chills))
-			.map((series, index) => {
-				return {
-					label: series.name,
-					data: series.points.map(p => p.yDamagePercentage),
-					borderColor: this.#colors[index % this.#colors.length],
-					tension: 0.1,
-					fill: false,
-					hidden: false,
-				};
-			});
+		const datasets = this.increasedChillEffects
+			.map(({ increasedChill, color }) => generateSeriesData(increasedChill, this.chills, color))
+			.map(series => ({
+				label: series.name,
+				data: series.points.map(p => p.yDamagePercentage),
+				borderColor: series.color,
+				tension: 0.1,
+				fill: false,
+				hidden: false,
+			}));
 
 		this.#chartInstance = new Chart(this.canvas, {
 			type: 'line',
